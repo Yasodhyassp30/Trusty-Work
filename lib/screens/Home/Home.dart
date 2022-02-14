@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sem/services/Authenticate.dart';
+import 'package:sem/userwidgets/chatlist.dart';
+import 'package:sem/userwidgets/searchworkers.dart';
 import 'package:sem/userwidgets/useraccount.dart';
+import 'package:sem/wrappers/wrapperprofile.dart';
 
 
 class Home extends StatefulWidget {
@@ -14,7 +17,9 @@ class _HomeState extends State<Home> {
   final Authservice _auth=Authservice();
   int _selected=0;
   static const List<Widget> _options=<Widget>[
-    useraccount(),
+    searchworkers(),
+    chatlist(),
+    profilewrapper(),
 
   ];
 void _ontapped(int index){
@@ -31,7 +36,7 @@ void _ontapped(int index){
       appBar: AppBar(
         actions: [
           TextButton.icon(
-            icon: Icon(Icons.logout_rounded,size: 30,color: Colors.brown,),
+            icon: Icon(Icons.exit_to_app_outlined,size: 30,color: Colors.brown,),
               label: Text(""),
               onPressed:()async{
             await _auth.signout();
@@ -58,8 +63,8 @@ void _ontapped(int index){
 
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search_rounded),
-            label: "Search",
+            icon: Icon(Icons.messenger),
+            label: "Messages",
 
           ),
 

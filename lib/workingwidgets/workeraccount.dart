@@ -5,35 +5,25 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sem/services/storage.dart';
 import 'dart:io';
 
-
-
-class useraccount extends StatefulWidget {
-  const useraccount({Key? key}) : super(key: key);
+class workeraccount extends StatefulWidget {
+  const workeraccount({Key? key}) : super(key: key);
 
   @override
-  _useraccountState createState() => _useraccountState();
+  _workeraccountState createState() => _workeraccountState();
 }
 
-class _useraccountState extends State<useraccount> {
-
-
+class _workeraccountState extends State<workeraccount> {
   String ? username,email,pic;
-
   @override
 
   Widget build(BuildContext context) {
-
-
     final currentuser =Provider.of<myUser?>(context);
     final Imagepic =ImagePicker();
-      username=currentuser?.username;
-      email=currentuser?.Email;
-      pic=currentuser?.PicUrl;
-      final datastore d1 = datastore();
-      File name;
-
-
-
+    username=currentuser?.username;
+    email=currentuser?.Email;
+    pic=currentuser?.PicUrl;
+    final datastore d1 = datastore();
+    File name;
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -43,7 +33,7 @@ class _useraccountState extends State<useraccount> {
               GestureDetector(
 
                 onTap: ()async{
-                  final picked =await Imagepic.pickImage(source: ImageSource.camera);
+                  final picked =await Imagepic.pickImage(source: ImageSource.gallery);
                   name=File(picked!.path);
                   String ? filrselected =await d1.UploadProfileImage(name);
                   setState(() {
@@ -58,11 +48,11 @@ class _useraccountState extends State<useraccount> {
                   backgroundColor: Colors.green[500],
                   child:CircleAvatar(
 
-                  radius: 90.0,
-                  backgroundColor: Colors.brown,
-                  foregroundImage: pic!=null ? NetworkImage(pic!):null,
+                    radius: 90.0,
+                    backgroundColor: Colors.brown,
+                    foregroundImage: pic!=null ? NetworkImage(pic!):null,
 
-                ),
+                  ),
 
                 ),
               ),

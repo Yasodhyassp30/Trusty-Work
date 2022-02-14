@@ -9,6 +9,7 @@ import 'package:sem/services/Authenticate.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+
   );
   runApp(const MyApp());
 }

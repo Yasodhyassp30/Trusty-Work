@@ -11,19 +11,16 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final currentuser =Provider.of<myUser?>(context);
+
     if(currentuser==null){
 
       return Container(
         child: Auth(),
       );
-    }else if(currentuser.username!=null){
+    }else {
 
       return Container(
         child: Home(),
-      );
-    }else{
-      return Container(
-        child: Auth(),
       );
     }
 

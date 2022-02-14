@@ -26,7 +26,7 @@ class Authservice {
     }
   }
 
-  Future registerwithEmail(String Email, String Password,String Username) async {
+  Future registerwithEmail(String Email, String Password,String Username,String Phoneno) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: Email, password: Password);
@@ -36,12 +36,29 @@ class Authservice {
       FirebaseStorage ? Store =FirebaseStorage.instance;
 
       String url=await Store.ref().child("image/avatar.png").getDownloadURL();
+      final DatabaseService d1=DatabaseService(uid: user.uid);
+      await d1.updateuserdata(Username, Phoneno, Email,url);
       await user.updatePhotoURL(url);
-      await _auth.signOut();
-      result =await _auth.signInWithEmailAndPassword(email:Email, password: Password);
-      user=result.user;
+      return _userFromfirebase(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+  Future registerwithEmailworker(String Email, String Password,String Username,List<String>workarea,String Phoneno) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: Email, password: Password);
+      User? user = result.user;
 
+      await user!.updateDisplayName(Username);
+      final DatabaseService d1=DatabaseService(uid: user.uid);
 
+      FirebaseStorage ? Store =FirebaseStorage.instance;
+
+      String url=await Store.ref().child("image/avatar.png").getDownloadURL();
+      var data=await d1.updateworkerdata(Username, Phoneno, Email, workarea,url);
+      await user.updatePhotoURL(url);
       return _userFromfirebase(user);
     } catch (e) {
       print(e.toString());
@@ -54,7 +71,7 @@ class Authservice {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: Email, password: Password);
       User? user = result.user;
-      return (_userFromfirebase(user));
+      return _userFromfirebase(user);
     } catch (e) {
       print(e.toString());
       return null;

@@ -2,33 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:sem/screens/Loadings/loadingscreenfadingcube.dart';
 import 'package:sem/services/Authenticate.dart';
 
-class signup extends StatefulWidget {
-  final Function ?toggleview;
+class workersignup extends StatefulWidget {
   final Function ?workusertoggle;
-  const signup({Key? key,this.toggleview,this.workusertoggle}) : super(key: key);
+  const workersignup({Key? key,this.workusertoggle}) : super(key: key);
 
   @override
-  _signupState createState() => _signupState();
+  _workersignupState createState() => _workersignupState();
 }
 
-class _signupState extends State<signup> {
+class _workersignupState extends State<workersignup> {
   final Authservice _auth=Authservice();
-
   String Email="";
+  String Phoneno="";
   String Password="";
   String confirmpassword="";
   String username="";
-  String phoneno="";
   String Error="";
+  String type="";
+  List<String> workarea=[];
   bool loading=false;
   @override
   Widget build(BuildContext context) {
-    return loading ? loadfadingcube(): Scaffold(
-      backgroundColor: Colors.white,
+    return loading ? loadfadingcube():Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[500],
-
-
       ),
       body: Container(
 
@@ -38,7 +35,7 @@ class _signupState extends State<signup> {
               child: Column(
                 children: [
                   SizedBox(height: 10.0,),
-                  Text("REGISTER WITH TESTER",style: TextStyle(color: Colors.brown,fontSize: 20.0),),
+                  Text("WORK WITH TESTER",style: TextStyle(color: Colors.brown,fontSize: 20.0),),
                   SizedBox(height: 10.0,),
                   Text("$Error",style: TextStyle(color: Colors.redAccent),),
                   SizedBox(height: 10.0,),
@@ -83,7 +80,7 @@ class _signupState extends State<signup> {
                   TextFormField(
                     style: TextStyle(color: Colors.brown),
                     decoration: InputDecoration(
-                      label: Text("Contact No",style: TextStyle(color: Colors.brown),),
+                      label: Text("Mobile No",style: TextStyle(color: Colors.brown),),
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.brown,
@@ -94,13 +91,44 @@ class _signupState extends State<signup> {
 
                     onChanged: (val){
                       setState(() {
-                        phoneno=val;
+                        Phoneno=val;
                       });
                     },
                   ),
-
-
                   SizedBox(height: 10.0,),
+                  TextFormField(
+                    style: TextStyle(color: Colors.brown),
+                    decoration: InputDecoration(
+                      label: Text("Type Of Work",style: TextStyle(color: Colors.brown),),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.brown,
+                          )
+                      ),
+                    ),
+
+                    onChanged: (val){
+                      setState(() {
+                        type=val;
+
+                      });
+                    },
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child:
+                      TextButton(onPressed: () {
+                        if (type.length > 0) {
+                          setState(() {
+                            workarea.add(type.toLowerCase());
+                          });
+                        }
+                      }, child: Text("Add",style: TextStyle(fontSize: 20.0,color: Colors.green[500]),)),
+
+                      ),
+
+                    ],
+                  ),
                   TextFormField(
                     style: TextStyle(color: Colors.brown),
                     decoration: InputDecoration(
@@ -163,7 +191,7 @@ class _signupState extends State<signup> {
                             setState(() {
                               loading=true;
                             });
-                            dynamic result=await _auth.registerwithEmail(Email, Password,username,phoneno);
+                            dynamic result=await _auth.registerwithEmailworker(Email, Password,username,workarea,Phoneno);
                             if(result==null){
                               setState(() {
                                 Error ="User Registration Failed";
@@ -182,29 +210,18 @@ class _signupState extends State<signup> {
                   Row(
                     children: [
                       Expanded(child:
-                      ElevatedButton(onPressed: ()async {
-                        widget.toggleview!();
+                      ElevatedButton.icon(onPressed: ()async {
+                        widget.workusertoggle!();
                         Error="";
-                      }, child: Text("Already User ?",style: TextStyle(fontSize: 20.0),),
+                      }, label :Text("Back",style: TextStyle(fontSize: 20.0),),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.  green[500])
                         ),
+                        icon: Icon(Icons.arrow_back),
                       ))
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(child:
-                      ElevatedButton(onPressed: ()async {
-                        widget.workusertoggle!();
-                        Error="";
-                      }, child: Text("Work with Tester",style: TextStyle(fontSize: 20.0),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors. brown)
-                        ),
-                      ))
-                    ],
-                  ),
+
                 ],
               ),
             ),
@@ -212,5 +229,7 @@ class _signupState extends State<signup> {
           )
       ),
     );
+
+
   }
 }

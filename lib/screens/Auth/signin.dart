@@ -89,11 +89,9 @@ class _SignINState extends State<SignIN> {
                           }else{
                             setState(() {
                               Error="";
-                            });
-                            setState(() {
                               loading=true;
                             });
-                            dynamic result= _auth.Signin_with_email(Email, Password);
+                            dynamic result= await _auth.Signin_with_email(Email, Password);
                             if(result==null){
                               setState(() {
                                 Error="Failed to Log in";
