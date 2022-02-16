@@ -92,6 +92,7 @@ class _chatcardState extends State<chatcard> {
         }else{
           result= docs;
         }
+        result=result.reversed.toList();
         return Container(
           child: Column(
            children: [

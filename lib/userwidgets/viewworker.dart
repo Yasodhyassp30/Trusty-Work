@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sem/userwidgets/chatbox.dart';
 import 'package:sem/userwidgets/requests.dart';
+import 'package:sem/userwidgets/viewprevious.dart';
 import 'package:sem/workingwidgets/workeraccount.dart';
 
 class viewworker extends StatefulWidget {
@@ -102,14 +103,15 @@ class _viewworkerState extends State<viewworker> {
                 ElevatedButton.icon(onPressed: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>requests()),
+                    MaterialPageRoute(builder: (context) =>requests(reciever: widget.workerdata,)),
                   );
                 },icon: Icon(Icons.assignment_turned_in),label: Text("Request  "),
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.brown)
                   ),)
               ],
-            )
+            ),
+            requestforindividual(uid: widget.workerdata!['uid'],)
 
           ],
         ),
