@@ -40,6 +40,7 @@ class _chatcardState extends State<chatcard> {
                           flex: 3,
                           child:CircleAvatar(
                             radius: 50.0,
+                            backgroundImage: AssetImage('assets/avatar.png'),
                             foregroundImage: NetworkImage(
                                 item['photoURL']
                             ),
@@ -120,11 +121,21 @@ class _chatcardState extends State<chatcard> {
                },
              ),
              SizedBox(height: 20.0,),
-             Column(
-               children:
-               result.map((e) => getTextWidgets(e.data())).toList(),
 
-             ),
+             Container(
+               padding: EdgeInsets.all(10.0),
+
+               decoration: BoxDecoration(
+                   color: Colors.grey[200],
+                 borderRadius: BorderRadius.circular(15.0)
+               ),
+               child:Column(
+                 children:
+                 result.map((e) => getTextWidgets(e.data())).toList(),
+
+               ) ,
+             )
+
            ],
 
           ),
@@ -132,7 +143,7 @@ class _chatcardState extends State<chatcard> {
       }else{
         return Container(
 
-        );
+          );
       }
 
 

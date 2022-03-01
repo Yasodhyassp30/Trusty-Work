@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sem/services/Authenticate.dart';
+import 'package:sem/userwidgets/allrequests.dart';
 import 'package:sem/userwidgets/chatlist.dart';
 import 'package:sem/userwidgets/searchworkers.dart';
 import 'package:sem/userwidgets/useraccount.dart';
@@ -19,6 +20,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> _options=<Widget>[
     searchworkers(),
     chatlist(),
+    allrequests(),
     profilewrapper(),
 
   ];
@@ -32,24 +34,12 @@ void _ontapped(int index){
 
     return
     Scaffold(
-      appBar: AppBar(
-        actions: [
-          TextButton.icon(
-            icon: Icon(Icons.exit_to_app_outlined,size: 30,color: Colors.brown,),
-              label: Text(""),
-              onPressed:()async{
-            await _auth.signout();
-          },)
-        ],
-        backgroundColor: Colors.green[500],
-
-
-      ),
       body: Container(
           padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
           child:_options.elementAt(_selected)
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.green[500],
         currentIndex:_selected ,
         onTap: _ontapped,
@@ -64,6 +54,13 @@ void _ontapped(int index){
           BottomNavigationBarItem(
             icon: Icon(Icons.messenger),
             label: "Messages",
+
+          ),
+
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work),
+            label: "Requests",
 
           ),
 

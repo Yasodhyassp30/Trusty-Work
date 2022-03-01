@@ -44,18 +44,48 @@ class _chatlistState extends State<chatlist> {
 
           }
 
-          return Container(
-            child: SingleChildScrollView(
-              child: chatcard(s1: ids,lastmessage: msgs,),
+          return Scaffold(
+            body: SafeArea(
+             child: Container(
 
-            ),
+               child: SingleChildScrollView(
+                   child:Column(
+                     children: [
+                       Row(
+                         children: [
+
+                           SizedBox(height: 5.0,),
+                           Text("Messages ",style: TextStyle(fontSize: 25.0,color: Colors.green[900]),),
+                           Expanded(child:SizedBox()),
+                           IconButton(
+                             icon: Icon(Icons.exit_to_app_outlined,size: 30,color: Colors.brown,),
+                             onPressed:()async{
+                               await _auth.signOut();
+                             },)
+
+                         ],
+                       ),
+                       SizedBox(height: 20.0,),
+
+                       chatcard(s1: ids,lastmessage: msgs,),
+                     ],
+                   )
+
+
+               ),
+             ),
+            )
           );
 
         }else{
-          return Container(
-              child: Align(
-                alignment: Alignment.center,
-                child: Text('No Conversations Found',style: TextStyle(color: Colors.brown,fontSize: 25.0,),),
+          return Scaffold(
+              body: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text('No Conversations Found',style: TextStyle(color: Colors.brown,fontSize: 25.0,),),
+                ),
               )
           );
       }

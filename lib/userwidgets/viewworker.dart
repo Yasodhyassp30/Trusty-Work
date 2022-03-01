@@ -1,12 +1,15 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sem/userwidgets/chatbox.dart';
 import 'package:sem/userwidgets/requests.dart';
 import 'package:sem/userwidgets/viewprevious.dart';
 import 'package:sem/workingwidgets/workeraccount.dart';
-
+import 'package:collection/collection.dart';
 class viewworker extends StatefulWidget {
-  final Map<String,dynamic>? workerdata;
+  final workerdata;
   const viewworker({Key? key,this.workerdata}) : super(key: key);
 
   @override
@@ -38,6 +41,22 @@ class _viewworkerState extends State<viewworker> {
           children: [
             SizedBox(height: 10.0,),
             Text(widget.workerdata!['Username'],style: TextStyle(fontSize: 25.0,color: Colors.brown),),
+           Row(children: [
+             RatingBarIndicator(
+
+                 rating:(widget.workerdata!['Rating'].length>0?widget.workerdata!['Rating'].reduce((a, b) => a + b)/widget.workerdata!['Rating'].length:0),
+                 itemSize: 20.0,
+                 itemPadding:
+                 EdgeInsets.symmetric(horizontal: 0.0),
+                 itemBuilder: (context,_)=>Icon(
+                   Icons.star,
+                   color: Colors.amber,
+                 ),
+
+             ),
+             (widget.workerdata['Rating'].length>100)? Text('(100+)',style: TextStyle(fontSize: 15.0),):
+             Text('(${widget.workerdata['Rating'].length})',style: TextStyle(fontSize: 15.0),),
+           ],),
             Row(
 
               mainAxisAlignment: MainAxisAlignment.start,
@@ -111,6 +130,8 @@ class _viewworkerState extends State<viewworker> {
                   ),)
               ],
             ),
+            SizedBox(height: 10.0),
+            Text('Requests',style: TextStyle(fontSize: 15.0,color: Colors.brown),),
             requestforindividual(uid: widget.workerdata!['uid'],)
 
           ],
