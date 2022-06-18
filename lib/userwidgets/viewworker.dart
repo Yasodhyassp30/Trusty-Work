@@ -1,5 +1,6 @@
 
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -18,125 +19,170 @@ class viewworker extends StatefulWidget {
 
 class _viewworkerState extends State<viewworker> {
   @override
+
   Widget getTextWidgets(List<dynamic> works)
   {
     return new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: works.map((item) => new Text(item,style: TextStyle(fontSize: 15.0,color: Colors.green),)).toList());
   }
-
+FirebaseAuth _auth= FirebaseAuth.instance;
 
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[500],
-        title: Text("Back"),
 
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10.0,),
-            Text(widget.workerdata!['Username'],style: TextStyle(fontSize: 25.0,color: Colors.brown),),
-           Row(children: [
-             RatingBarIndicator(
-
-                 rating:(widget.workerdata!['Rating'].length>0?widget.workerdata!['Rating'].reduce((a, b) => a + b)/widget.workerdata!['Rating'].length:0),
-                 itemSize: 20.0,
-                 itemPadding:
-                 EdgeInsets.symmetric(horizontal: 0.0),
-                 itemBuilder: (context,_)=>Icon(
-                   Icons.star,
-                   color: Colors.amber,
-                 ),
-
-             ),
-             (widget.workerdata['Rating'].length>100)? Text('(100+)',style: TextStyle(fontSize: 15.0),):
-             Text('(${widget.workerdata['Rating'].length})',style: TextStyle(fontSize: 15.0),),
-           ],),
-            Row(
-
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.lightGreen,
+                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(50))
+                ),
+                child: Row(
                   children: [
 
-                    SizedBox(height: 10.0,),
-                    Text("Email",style: TextStyle(fontSize: 18.0,color: Colors.brown),),
                     SizedBox(height: 5.0,),
-                    Text(widget.workerdata!['Email'],style: TextStyle(fontSize: 15.0,color: Colors.green[800]),),
-                    SizedBox(height: 10.0,),
-                    Text(widget.workerdata!['Contact_No'],style: TextStyle(fontSize: 15.0,color: Colors.brown),),
+                    IconButton(
+                      icon: Icon(Icons.arrow_back ,size: 30,color: Colors.white,),
+                      onPressed:(){
+                        Navigator.pop(context);
+                      },),
+                    SizedBox(width: 10.0,),
+                    Text("Back ",style: TextStyle(fontSize: 25.0,color: Colors.white),),
+                    Expanded(child:SizedBox()),
                   ],
-                ),),
+                ),
+                padding: EdgeInsets.all(10),
+              ),
+              SizedBox(height: 20.0,),
+              Container(
+                padding: EdgeInsets.all(10),
+                child:Container(
+                  padding: EdgeInsets.all(10.0),
 
-                Expanded(
-                  flex: 4,
-                  child:
-                    Column(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(15.0)
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10.0,),
+                      Text(widget.workerdata!['Username'],style: TextStyle(fontSize: 25.0,color: Colors.brown),),
+                      Row(children: [
+                        RatingBarIndicator(
 
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.green[500],
-                          radius: 80.0,
-                          foregroundImage: NetworkImage(widget.workerdata!['photoURL']),
+                          rating:(widget.workerdata!['ratecount']>0?widget.workerdata!['Rating']/widget.workerdata!['ratecount']:0),
+                          itemSize: 20.0,
+                          itemPadding:
+                          EdgeInsets.symmetric(horizontal: 0.0),
+                          itemBuilder: (context,_)=>Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
 
-                        )
-                      ],
-                    )
-                  ,
-                )
-              ],
-            ),
-            Text('Looking for work  :',style: TextStyle(fontSize: 15.0,color: Colors.brown),),
-            SizedBox(height: 10.0),
-            getTextWidgets(widget.workerdata!['works']),
-            SizedBox(height: 30.0,),
-            Text("About",style: TextStyle(fontSize: 15.0,color: Colors.brown),),
-            Text(
-              widget.workerdata!['Summery'],
-              style: TextStyle(color: Colors.green[800],fontSize: 15.0),
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 3,
-            ),
-            SizedBox(height: 10.0,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>messenger(reciver: widget.workerdata,)),
-                  );
-                },icon: Icon(Icons.messenger),label: Text("Message"),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.  green[500])
-                  ),),
-                ElevatedButton.icon(onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>requests(reciever: widget.workerdata,)),
-                  );
-                },icon: Icon(Icons.assignment_turned_in),label: Text("Request  "),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.brown)
-                  ),)
-              ],
-            ),
-            SizedBox(height: 10.0),
-            Text('Requests',style: TextStyle(fontSize: 15.0,color: Colors.brown),),
-            requestforindividual(uid: widget.workerdata!['uid'],)
+                        ),
+                        (widget.workerdata['ratecount']>100)? Text('(100+)',style: TextStyle(fontSize: 15.0),):
+                        Text('(${widget.workerdata['ratecount']})',style: TextStyle(fontSize: 15.0),),
+                      ],),
+                      Row(
 
-          ],
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(widget.workerdata!['Email'],style: TextStyle(fontSize: 15.0,color: Colors.green[800]),),
+                                SizedBox(height: 10.0,),
+                                Text(widget.workerdata!['Contact_No'],style: TextStyle(fontSize: 15.0,color: Colors.brown),),
+                              ],
+                            ),),
+
+                          Expanded(
+                            flex: 4,
+                            child:
+                            Column(
+
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.green[500],
+                                  radius: 80.0,
+                                  foregroundImage: NetworkImage(widget.workerdata!['photoURL']),
+
+                                )
+                              ],
+                            )
+                            ,
+                          )
+                        ],
+                      ),
+                      Text("About",style: TextStyle(fontSize: 15.0,color: Colors.brown),),
+                      Text(
+                        widget.workerdata!['Summery'],
+                        style: TextStyle(color: Colors.green[800],fontSize: 15.0),
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                      ),
+                      SizedBox(height: 20.0,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(child: ElevatedButton.icon(onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>messenger(reciver: widget.workerdata,)),
+                            );
+                          },icon: Icon(Icons.messenger),label: Text("Message"),
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.green,
+                                padding: EdgeInsets.all(10)
+                            ),),)
+                        ],
+                      ),
+                      SizedBox(height: 10.0,),
+                      Row(
+                        children: [
+                          Expanded(child: ElevatedButton.icon(onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>requests(reciever: widget.workerdata,)),
+                            );
+                          },icon: Icon(Icons.assignment_turned_in),label: Text("Request"),
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.lightGreen,
+                                padding: EdgeInsets.all(10)
+                            ),))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.0,),
+              Container(
+                  padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    SizedBox(height: 10.0),
+                    Text('Older Requests',style: TextStyle(fontSize: 15.0,color: Colors.brown),),
+                    requestforindividual(uid: widget.workerdata!['uid'],)
+                  ],
+                ),
+              ),
+
+
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }

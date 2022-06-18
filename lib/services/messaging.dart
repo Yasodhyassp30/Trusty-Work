@@ -20,7 +20,7 @@ class massege{
           'sender':sender,
           'reciever':reciever,
           'message':message,
-          'time':Timestamp.now()
+          'time':DateTime.now()
         }
       ])});
 
@@ -34,7 +34,7 @@ class massege{
                 'sender':sender,
                 'reciever':reciever,
                 'message':message,
-                'time':Timestamp.now()
+                'time':DateTime.now()
               }
             ],
 
@@ -54,7 +54,7 @@ class massege{
           'sender':sender,
           'reciever':reciever,
           'message':message,
-          'time':Timestamp.now()
+          'time':DateTime.now()
         }
       ])});
 
@@ -67,7 +67,7 @@ class massege{
                 'sender':sender,
                 'reciever':reciever,
                 'message':message,
-                'time':Timestamp.now()
+                'time':DateTime.now()
               }
             ],
 

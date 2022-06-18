@@ -25,11 +25,6 @@ class _signupState extends State<signup> {
   Widget build(BuildContext context) {
     return loading ? loadfadingcube(): Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.green[500],
-
-
-      ),
       body: Container(
 
           padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 50.0),
@@ -38,7 +33,22 @@ class _signupState extends State<signup> {
               child: Column(
                 children: [
                   SizedBox(height: 10.0,),
-                  Text("REGISTER WITH TESTER",style: TextStyle(color: Colors.brown,fontSize: 20.0),),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height*0.1,
+                        width: MediaQuery.of(context).size.width*0.1,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/signupimage.png')
+                            )
+                        ),
+                      ),
+                      SizedBox(width: 8,),
+                      Text("Register Trusty WORK",style: TextStyle(color: Colors.brown,fontSize: 18.0,fontWeight: FontWeight.bold),),
+                    ],
+                  ),
                   SizedBox(height: 10.0,),
                   Text("$Error",style: TextStyle(color: Colors.redAccent),),
                   SizedBox(height: 10.0,),
@@ -173,12 +183,14 @@ class _signupState extends State<signup> {
 
                           }
                         }, label: Text("REGISTER",style: TextStyle(fontSize: 20.0),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.  brown[600])
-                        ),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.green[400],
+                              padding: EdgeInsets.all(10)
+                          )
                       ))
                     ],
                   ),
+                  SizedBox(height: 8,),
                   Row(
                     children: [
                       Expanded(child:
@@ -186,22 +198,25 @@ class _signupState extends State<signup> {
                         widget.toggleview!();
                         Error="";
                       }, child: Text("Already User ?",style: TextStyle(fontSize: 20.0),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.  green[500])
-                        ),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.green[700],
+                              padding: EdgeInsets.all(10)
+                          )
                       ))
                     ],
                   ),
+                  SizedBox(height: 8,),
                   Row(
                     children: [
                       Expanded(child:
                       ElevatedButton(onPressed: ()async {
                         widget.workusertoggle!();
                         Error="";
-                      }, child: Text("Work with Tester",style: TextStyle(fontSize: 20.0),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors. brown)
-                        ),
+                      }, child: Text("Work with Trusty",style: TextStyle(fontSize: 20.0),),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.green[900],
+                              padding: EdgeInsets.all(10)
+                          )
                       ))
                     ],
                   ),

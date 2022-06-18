@@ -4,6 +4,8 @@ import 'package:sem/userwidgets/allrequests.dart';
 import 'package:sem/userwidgets/chatlist.dart';
 import 'package:sem/userwidgets/searchworkers.dart';
 import 'package:sem/userwidgets/useraccount.dart';
+import 'package:sem/workingwidgets/locationfinder.dart';
+import 'package:sem/workingwidgets/workrequests.dart';
 import 'package:sem/wrappers/wrapperprofile.dart';
 
 
@@ -21,7 +23,7 @@ class _HomeState extends State<Home> {
     searchworkers(),
     chatlist(),
     allrequests(),
-    profilewrapper(),
+    useraccount(),
 
   ];
 void _ontapped(int index){
@@ -31,21 +33,21 @@ void _ontapped(int index){
 }
   @override
   Widget build(BuildContext context) {
-
     return
     Scaffold(
       body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
           child:_options.elementAt(_selected)
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.green[500],
+        type: BottomNavigationBarType.shifting,
+        backgroundColor: Colors.lightGreen,
+        selectedItemColor: Colors.white,
         currentIndex:_selected ,
         onTap: _ontapped,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home,),
+            backgroundColor: Colors.lightGreen,
             label: "Home",
 
 
@@ -53,6 +55,7 @@ void _ontapped(int index){
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.messenger),
+            backgroundColor: Colors.lightGreen,
             label: "Messages",
 
           ),
@@ -61,12 +64,14 @@ void _ontapped(int index){
           BottomNavigationBarItem(
             icon: Icon(Icons.work),
             label: "Requests",
+            backgroundColor: Colors.lightGreen,
 
           ),
 
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: "Profile",
+            backgroundColor: Colors.lightGreen,
 
           )
         ],

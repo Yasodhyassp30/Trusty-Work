@@ -20,7 +20,8 @@ class DatabaseService {
           'Email': email,
           'Summery':"",
           "works":works,
-          "Rating":[]
+          "Rating":0,
+          "ratecount":0
         }
     );
   }

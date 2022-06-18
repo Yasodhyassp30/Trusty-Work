@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sem/models/user.dart';
 import 'package:sem/screens/Auth/Auth.dart';
 import 'package:sem/screens/Home/Home.dart';
+import 'package:sem/wrappers/wrapperprofile.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class Wrapper extends StatelessWidget {
     }else {
 
       return Container(
-        child: Home(),
+        child: profilewrapper(),
       );
     }
 

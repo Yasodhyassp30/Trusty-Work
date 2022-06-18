@@ -51,23 +51,33 @@ class _chatlistState extends State<chatlist> {
                child: SingleChildScrollView(
                    child:Column(
                      children: [
-                       Row(
-                         children: [
+                       Container(
+                         padding: EdgeInsets.all(16),
+                         decoration: BoxDecoration(
+                           color: Colors.lightGreen[400],
+                           borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
 
-                           SizedBox(height: 5.0,),
-                           Text("Messages ",style: TextStyle(fontSize: 25.0,color: Colors.green[900]),),
-                           Expanded(child:SizedBox()),
-                           IconButton(
-                             icon: Icon(Icons.exit_to_app_outlined,size: 30,color: Colors.brown,),
-                             onPressed:()async{
-                               await _auth.signOut();
-                             },)
+                         ),
+                         child:  Row(
+                           children: [
 
-                         ],
+                             SizedBox(width: 5.0,),
+                             Icon(Icons.message,color: Colors.white,size: 30,),
+                             SizedBox(width: 10.0,),
+                             Text("Messages ",style: TextStyle(fontSize: 25.0,color: Colors.white),),
+                             Expanded(child:SizedBox()),
+
+
+                           ],
+                         ),
                        ),
                        SizedBox(height: 20.0,),
+                       Container(
+                         padding: EdgeInsets.all(10),
+                         child:  chatcard(s1: ids,lastmessage: msgs,),
+                       )
 
-                       chatcard(s1: ids,lastmessage: msgs,),
+
                      ],
                    )
 
@@ -79,13 +89,39 @@ class _chatlistState extends State<chatlist> {
 
         }else{
           return Scaffold(
-              body: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text('No Conversations Found',style: TextStyle(color: Colors.brown,fontSize: 25.0,),),
-                ),
+              body:SafeArea(
+                child:Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.lightGreen[400],
+                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
+
+                      ),
+                      child:  Row(
+                        children: [
+
+                          SizedBox(width: 5.0,),
+                          Icon(Icons.message,color: Colors.white,size: 30,),
+                          SizedBox(width: 10.0,),
+                          Text("Messages ",style: TextStyle(fontSize: 25.0,color: Colors.white),),
+                          Expanded(child:SizedBox()),
+
+
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height*0.7,
+                      width: MediaQuery.of(context).size.width,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('No Conversations Found',style: TextStyle(color: Colors.brown,fontSize: 25.0,),),
+                      ),
+                    )
+                  ],
+                )
               )
           );
       }

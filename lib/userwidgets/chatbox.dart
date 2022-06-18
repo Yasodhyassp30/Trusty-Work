@@ -57,8 +57,6 @@ class _messengerState extends State<messenger> {
                   padding: EdgeInsets.only(bottom: 60.0),
                   child:  ListView.builder(
                       controller: con,
-
-
                       itemCount: messageslist.length,
                       itemBuilder: (context,index){
                         return SingleChildScrollView(

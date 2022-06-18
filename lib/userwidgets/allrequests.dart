@@ -27,11 +27,7 @@ class _allrequestsState extends State<allrequests> {
         stream: FirebaseFirestore.instance.collection('requests').doc(_auth.currentUser!.uid).snapshots(),
         builder:(context,snapshot){
 
-         if(snapshot.connectionState==ConnectionState.waiting){
 
-           return loadfadingcube();
-
-         }else{
            List objects=[];
            if(snapshot.data?.data()!=null){
              if(all){
@@ -57,24 +53,30 @@ class _allrequestsState extends State<allrequests> {
              }
 
              return Container(
+               height: MediaQuery.of(context).size.height,
               child: SafeArea(
-                  child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Row(
-                          children: [
+                       Container(
+                         padding: EdgeInsets.all(16),
+                         decoration: BoxDecoration(
+                           color: Colors.lightGreen[400],
+                           borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
 
-                            SizedBox(height: 5.0,),
-                            Text("Orders ",style: TextStyle(fontSize: 25.0,color: Colors.green[900]),),
-                            Expanded(child:SizedBox()),
-                            IconButton(
-                              icon: Icon(Icons.exit_to_app_outlined,size: 30,color: Colors.brown,),
-                              onPressed:()async{
-                                await _auth.signOut();
-                              },)
+                         ),
+                         child:  Row(
+                           children: [
 
-                          ],
-                        ),
+                             SizedBox(width: 5.0,),
+                             Icon(Icons.list_alt,color: Colors.white,size: 30,),
+                             SizedBox(width: 10.0,),
+                             Text("Orders ",style: TextStyle(fontSize: 25.0,color: Colors.white),),
+                             Expanded(child:SizedBox()),
+
+
+                           ],
+                         ),
+                       ),
                         SizedBox(height: 10.0,),
                         Container(
                           width: MediaQuery.of(context).size.width,
@@ -134,102 +136,187 @@ class _allrequestsState extends State<allrequests> {
                                   ],
                                 ),
                               ),
-                              Column(
-                                children:objects.map((e) =>  Card(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Row(
+                              Container(
+                                height: MediaQuery.of(context).size.height*0.7,
+                                child:  ListView.builder(itemCount: objects.length,itemBuilder: (context,index){
+                                  return Card(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Row(
 
-                                      children: [
-                                        Expanded(child: Column(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .start,
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Text(e['title'], style: TextStyle(
-                                                fontSize: 25.0,
-                                                color: Colors.green[500]),),
-                                            (e['completed']) ?
-                                            Text('Status : Completed',
-                                              style: TextStyle(
-                                                  color: Colors.green),) :
-                                            (e['accepted']) ?
-                                            Text('Status : Ongoing',
+                                        children: [
+                                          Expanded(child: Column(
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .start,
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              Text(objects[index]['title'], style: TextStyle(
+                                                  fontSize: 25.0,
+                                                  color: Colors.green[500]),),
+                                              (objects[index]['completed']) ?
+                                              Text('Status : Completed',
                                                 style: TextStyle(
-                                                    color: Colors.orange)) :
-                                            Text('Status : Not Accepted yet',
-                                                style: TextStyle(
-                                                    color: Colors.red)),
-                                            SizedBox(height: 20.0,),
-                                            Text('Address : ${e['address']}',style: TextStyle(fontSize: 18.0),),
-                                            Text('Agreed Payment : \$ ${e['payment']}',style: TextStyle(fontSize: 18.0,color: Colors.brown),),
+                                                    color: Colors.green),) :
+                                              (objects[index]['accepted']) ?
+                                              Text('Status : Ongoing',
+                                                  style: TextStyle(
+                                                      color: Colors.orange)) :
+                                              Text('Status : Not Accepted yet',
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                              SizedBox(height: 20.0,),
+                                              Text('Address : ${objects[index]['address']}',style: TextStyle(fontSize: 18.0),),
+                                              Text('Agreed Payment : \$ ${objects[index]['payment']}',style: TextStyle(fontSize: 18.0,color: Colors.brown),),
 
-                                            ElevatedButton(onPressed:()async{
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) =>viewrequest(requestdetails: e,)),
-                                              );
-                                            }, child:Text("View Details"),
-                                                style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(Colors.lightGreen[500])
-                                                )
-                                            ),
-                                          ],
-                                        ),),
-                                        (!e['completed'] && !e['accepted']
-                                            ? Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: TextButton.icon(
-                                            onPressed: () async {
-                                              final d1 = WorkRequests(
-                                                  Reciever: e['Reciever'],
-                                                  Contractor: e['Contractor']);
-                                              await d1.deleterecord(e);
-                                            },
-                                            icon: Icon(Icons.cancel, size: 30.0,
-                                              color: Colors.red,),
-                                            label: Text(""),),
-                                        )
-                                            :
-                                        (e['completed']) ? Align(
-                                          alignment: Alignment.centerLeft,
-                                          child:Icon(Icons.assignment_turned_in,
-                                            size: 30.0, color: Colors.green,),
+                                              ElevatedButton(onPressed:()async{
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) =>viewrequest(requestdetails: objects[index],)),
+                                                );
+                                              }, child:Text("View Details"),
+                                                  style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all(Colors.lightGreen[500])
+                                                  )
+                                              ),
+                                            ],
+                                          ),),
+                                          (!objects[index]['completed'] && !objects[index]['accepted']
+                                              ? Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: TextButton.icon(
+                                              onPressed: () async {
+                                                final d1 = WorkRequests(
+                                                    Reciever: objects[index]['Reciever'],
+                                                    Contractor: objects[index]['Contractor']);
+                                                await d1.deleterecord(objects[index]);
+                                              },
+                                              icon: Icon(Icons.cancel, size: 30.0,
+                                                color: Colors.red,),
+                                              label: Text(""),),
+                                          )
+                                              :
+                                          (objects[index]['completed']) ? Align(
+                                            alignment: Alignment.centerLeft,
+                                            child:Icon(Icons.assignment_turned_in,
+                                              size: 30.0, color: Colors.green,),
 
-                                        ) :
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child:  Icon(
-                                            Icons.airport_shuttle, size: 30.0,
-                                            color: Colors.orange,),
+                                          ) :
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child:  Icon(
+                                              Icons.airport_shuttle, size: 30.0,
+                                              color: Colors.orange,),
 
-                                        )
-                                        ),
+                                          )
+                                          ),
 
 
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
 
 
-                                )).toList(),
-                              )
+                                  );
+                                }),
+                              ),
                             ],
                           ),
                         )
                       ],
                     ),
-                  ),
               ),
-               );
+             );
            }else{
-             return Container();
+             return Scaffold(
+                 body:SafeArea(
+                   child: Column(
+                     children: [
+                       Container(
+                         padding: EdgeInsets.all(16),
+                         decoration: BoxDecoration(
+                           color: Colors.lightGreen[400],
+                           borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
+
+                         ),
+                         child:  Row(
+                           children: [
+
+                             SizedBox(width: 5.0,),
+                             Icon(Icons.list_alt,color: Colors.white,size: 30,),
+                             SizedBox(width: 10.0,),
+                             Text("Orders ",style: TextStyle(fontSize: 25.0,color: Colors.white),),
+                             Expanded(child:SizedBox()),
+
+
+                           ],
+                         ),
+                       ),
+                       Container(
+                         width: MediaQuery.of(context).size.width*0.9,
+                         child: Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                           children: [
+                             TextButton(onPressed: (){
+                               setState(() {
+                                 all=true;
+                                 completed=false;
+                                 onging=false;
+                                 not=false;
+                               });
+
+                             },
+                               child: Text('All',style: TextStyle(color:all ? Colors.green[900]:Colors.grey ),),),
+                             TextButton(onPressed: (){
+                               setState(() {
+                                 all=false;
+                                 completed=true;
+                                 onging=false;
+                                 not=false;
+                               });
+
+                             },
+                               child: Text('Completed',style: TextStyle(color:completed ? Colors.green[900]:Colors.grey ),),),
+
+                             TextButton(onPressed: (){
+                               setState(() {
+                                 all=false;
+                                 completed=false;
+                                 onging=true;
+                                 not=false;
+                               });
+
+                             },
+                               child: Text('Ongoing',style: TextStyle(color:onging ? Colors.green[900]:Colors.grey ),),),
+                             TextButton(onPressed: (){
+                               setState(() {
+                                 all=false;
+                                 completed=false;
+                                 onging=false;
+                                 not=true;
+                               });
+
+                             },
+                               child: Text('Not Accepted',style: TextStyle(color:not ? Colors.green[900]:Colors.grey ),),)
+                           ],
+                         ),
+                       ),
+                       Container(
+                         padding: EdgeInsets.only(top: 50.0),
+                         child: Align(
+                           alignment: Alignment.center,
+                           child: Text('No Requests Found',style: TextStyle(color: Colors.brown,fontSize: 25.0,),),
+                         ),
+                       )
+                     ],
+                   ),
+                 )
+             );
 
            }
 
          }
-        });
+        );
 
   }
 }
