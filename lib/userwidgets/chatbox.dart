@@ -226,7 +226,7 @@ class _messengerState extends State<messenger> {
                             XFile? imagepicked = await picker.pickImage(
                                 source: ImageSource.camera);
                             if (imagepicked != null) {
-                              File Image = File(imagepicked!.path);
+                              File Image = File(imagepicked.path);
                               datastore d1 = datastore();
                               await d1.msgimage(Image, widget.reciver!['uid'],
                                   _auth.currentUser!.uid);
@@ -245,7 +245,7 @@ class _messengerState extends State<messenger> {
                             XFile? imagepicked = await picker.pickImage(
                                 source: ImageSource.gallery);
                             if (imagepicked != null) {
-                              File Image = File(imagepicked!.path);
+                              File Image = File(imagepicked.path);
                               datastore d1 = datastore();
                               await d1.msgimage(Image, widget.reciver!['uid'],
                                   _auth.currentUser!.uid);

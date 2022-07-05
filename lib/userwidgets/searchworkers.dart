@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:sem/models/user.dart';
 import 'package:sem/services/workrequests.dart';
 import 'package:sem/userwidgets/dashboardtodayrequests.dart';
+import 'package:sem/userwidgets/postsuser.dart';
 import 'package:sem/userwidgets/searchlist.dart';
 import 'package:sem/userwidgets/viewworker.dart';
 import 'package:sem/workingwidgets/notifications.dart';
@@ -200,7 +201,7 @@ class _searchworkersState extends State<searchworkers> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -222,8 +223,8 @@ class _searchworkersState extends State<searchworkers> {
                                         "Upcoming Services",
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                            fontSize: 25.0,
-                                            color: Colors.green[900]),
+                                            fontSize: 18.0,
+                                            color: Colors.black),
                                       ),
                                       SizedBox(
                                         height: 10.0,
@@ -280,8 +281,8 @@ class _searchworkersState extends State<searchworkers> {
                                                 "No Upcoming Service Requests",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color: Colors.brown),
+                                                    fontSize: 15.0,
+                                                    color: Colors.black26),
                                               ),
                                             )
                                     ],
@@ -318,11 +319,94 @@ class _searchworkersState extends State<searchworkers> {
                                 )
                               ],
                             )),
-                        SizedBox(
-                          height: 10,
-                        ),
                       ],
                     ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width - 20,
+                            padding: EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                                color: Colors.lightGreen[200],
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Row(
+                              children: [
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Public Offers",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          "Post/View Your Public Requests",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              color: Colors.black26),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      right: BorderSide(color: Colors.brown),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(child: SizedBox()),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => posts()),
+                                      );
+                                    },
+                                    color: Colors.green[500],
+                                    icon: Icon(
+                                      Icons.post_add,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 18),
+                        child: Text(
+                          "Quick Find",
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              TextStyle(fontSize: 15.0, color: Colors.black26),
+                        ),
+                      )
+                    ],
                   ),
                   Expanded(
                     child: Container(

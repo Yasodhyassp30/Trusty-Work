@@ -47,6 +47,33 @@ class datastore {
     return 'done';
   }
 
+  Future? posts(List<File> images, User user, String look, String text) async {
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection("posts").doc();
+    List fileurls = [];
+    for (int i = 0; i < images.length; i++) {
+      var stroeref = store?.ref().child("posts/${ref.id}/${DateTime.now()}");
+      var upload = await stroeref?.putFile(images[i]);
+      String? completed = await upload?.ref.getDownloadURL();
+
+      fileurls.add(completed);
+    }
+
+    FirebaseFirestore.instance.collection('posts').doc(ref.id).set({
+      'URL': fileurls,
+      'interest': [],
+      'date': DateTime.now(),
+      'owner': user.uid,
+      'looking': look,
+      'text': text,
+      'name': user.displayName,
+      'imageurl': user.photoURL,
+      'completed': false
+    });
+
+    return 'done';
+  }
+
   Future? msgimage(File images, String Rid, String cid) async {
     String fileurls = " ";
 
