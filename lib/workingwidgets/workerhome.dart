@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sem/models/user.dart';
 import 'package:sem/workingwidgets/notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:sem/workingwidgets/postsworker.dart';
 import 'package:sem/workingwidgets/scheduler.dart';
 
 import 'locationfinder.dart';
@@ -25,12 +26,18 @@ class _workerhomeState extends State<workerhome> {
   final DatabaseService d1 = DatabaseService();
   TextEditingController key = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
+  bool post = false;
   List menuitems = [
     ['Requests', 'Calender']
   ];
   bool calender = false;
   void toggle() {
     calender = !calender;
+    setState(() {});
+  }
+
+  void togglepost() {
+    post = !post;
     setState(() {});
   }
 
@@ -50,6 +57,11 @@ class _workerhomeState extends State<workerhome> {
     if (calender) {
       return calenderwork(
         toggler: toggle,
+      );
+    }
+    if (post) {
+      return postworkers(
+        toggler: togglepost,
       );
     }
     return Scaffold(
@@ -88,49 +100,14 @@ class _workerhomeState extends State<workerhome> {
                             ],
                           ),
                         ),
-                        StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('gallery')
-                                .where('Reciever',
-                                    isEqualTo: _auth.currentUser!.uid)
-                                .where('accepted', isEqualTo: false)
-                                .snapshots(),
-                            builder: (context, notifications) {
-                              if (notifications.data != null &&
-                                  notifications.connectionState !=
-                                      ConnectionState.waiting) {
-                                return IconButton(
-                                    onPressed: () {
-                                      print(notifications.data!.docs);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  notificationlist()));
-                                    },
-                                    icon: Icon(
-                                      (notifications.data != null &&
-                                              notifications.data!.docs.length !=
-                                                  0)
-                                          ? Icons.notifications_active
-                                          : Icons.notifications,
-                                      size: 30,
-                                      color: Colors.white,
-                                    ));
-                              } else {
-                                return Container(
-                                  child: Text('No new requests'),
-                                );
-                              }
-                            }),
                       ],
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                  child: Center(
+              Center(
                 child: Container(
+                    height: MediaQuery.of(context).size.height * 0.21,
                     padding: EdgeInsets.all(10),
                     child: ListView.builder(
                         itemCount: menuitems.length,
@@ -152,7 +129,7 @@ class _workerhomeState extends State<workerhome> {
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
-                                                0.15,
+                                                0.1,
                                             decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(
                                                     topRight:
@@ -243,7 +220,7 @@ class _workerhomeState extends State<workerhome> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.15,
+                                              0.1,
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.only(
                                                   topRight: Radius.circular(10),
@@ -307,7 +284,60 @@ class _workerhomeState extends State<workerhome> {
                             ],
                           );
                         })),
-              )),
+              ),
+              Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            topLeft: Radius.circular(10)),
+                        color: Colors.grey,
+                        image: DecorationImage(
+                            image: AssetImage('assets/posts.png'),
+                            fit: BoxFit.cover)),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10)),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Public Orders',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    post = true;
+                                  });
+                                },
+                                icon: Icon(Icons.post_add_sharp))
+                          ],
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.only(left: 5, right: 5),

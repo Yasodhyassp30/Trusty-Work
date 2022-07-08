@@ -76,7 +76,8 @@ class _searchworkersState extends State<searchworkers> {
         );
       } else {
         return Scaffold(
-          backgroundColor: Colors.grey[300],
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.grey[200],
           body: SafeArea(
             child: Container(
               height: MediaQuery.of(context).size.height,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sem/models/user.dart';
 import 'package:sem/screens/Wrapped.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sem/screens/spwrap.dart';
 import 'package:sem/services/Authenticate.dart';
 
 void main() async {
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         catchError: (_, __) {},
         initialData: null,
         child: const MaterialApp(
-          home: Wrapper(),
+          home: Wrappersp(),
         ));
   }
 }

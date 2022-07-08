@@ -184,81 +184,112 @@ class _singlerequestState extends State<singlerequest> {
                                             )
                                           : (!widget
                                                   .requestdetails['completed'])
-                                              ? Row(
+                                              ? Column(
                                                   children: [
-                                                    Expanded(
-                                                        child: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            locationfind(
-                                                                              locationdetails: widget.requestdetails,
-                                                                            )),
-                                                              );
-                                                            },
-                                                            child: Text(
-                                                                "View Route"),
-                                                            style: ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all(
-                                                                        Colors.lightGreen[
-                                                                            500]))))
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                            child:
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                locationfind(
+                                                                                  locationdetails: widget.requestdetails,
+                                                                                )),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                        "View Route"),
+                                                                    style: ButtonStyle(
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all(Colors.lightGreen[500]))))
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                            child:
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      WorkRequests
+                                                                          w1 =
+                                                                          WorkRequests();
+                                                                      await w1.markascompleted(widget
+                                                                          .requestdetails
+                                                                          .id);
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        "Mark as Completed"),
+                                                                    style: ButtonStyle(
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all(Colors.lightGreen[800]))))
+                                                      ],
+                                                    )
                                                   ],
                                                 )
-                                              : (widget.requestdetails[
-                                                      'accepted'])
-                                                  ? Container()
-                                                  : Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Expanded(
-                                                                child: ElevatedButton
-                                                                    .icon(
-                                                                        onPressed:
-                                                                            () async {
-                                                                          await requestobject.acceptrequest(widget
-                                                                              .requestdetails
-                                                                              .id);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        icon: Icon(Icons
-                                                                            .check),
-                                                                        label: Text(
-                                                                            "Accept"),
-                                                                        style: ButtonStyle(
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all(Colors.lightGreen[500]))))
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Expanded(
-                                                                child: ElevatedButton
-                                                                    .icon(
-                                                                        onPressed:
-                                                                            () async {
-                                                                          await requestobject
-                                                                              .deleterecord(widget.requestdetails);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        icon: Icon(Icons
-                                                                            .clear),
-                                                                        label: Text(
-                                                                            "Reject"),
-                                                                        style: ButtonStyle(
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all(Colors.redAccent[500]))))
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ))
-                                      : Container()
+                                              : Container())
+                                      : (widget.requestdetails['accepted'])
+                                          ? Container()
+                                          : Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                        child:
+                                                            ElevatedButton.icon(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await requestobject
+                                                                      .acceptrequest(widget
+                                                                          .requestdetails
+                                                                          .id);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                icon: Icon(Icons
+                                                                    .check),
+                                                                label: Text(
+                                                                    "Accept"),
+                                                                style: ButtonStyle(
+                                                                    backgroundColor:
+                                                                        MaterialStateProperty.all(
+                                                                            Colors.lightGreen[500]))))
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                        child:
+                                                            ElevatedButton.icon(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await requestobject
+                                                                      .deleterecord(
+                                                                          widget
+                                                                              .requestdetails);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                icon: Icon(Icons
+                                                                    .clear),
+                                                                label: Text(
+                                                                    "Reject"),
+                                                                style: ButtonStyle(
+                                                                    backgroundColor:
+                                                                        MaterialStateProperty.all(
+                                                                            Colors.redAccent[500]))))
+                                                  ],
+                                                )
+                                              ],
+                                            )
                                 ],
                               )),
                         ],

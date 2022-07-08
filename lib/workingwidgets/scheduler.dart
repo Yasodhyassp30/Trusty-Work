@@ -120,26 +120,33 @@ class _calenderworkState extends State<calenderwork> {
                                         Icons.check,
                                         color: Colors.green,
                                       )
-                                    : ElevatedButton.icon(
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.green),
-                                        icon: Icon(Icons.timer),
-                                        onPressed: () {
-                                          Map directions = {
-                                            'lat': today[k]['lat'],
-                                            'long': today[k]['long']
-                                          };
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      locationfind(
-                                                        locationdetails:
-                                                            directions,
-                                                      )));
-                                        },
-                                        label: Text("Start"),
-                                      )
+                                    : (today[k]['date'] ==
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(DateTime.now()))
+                                        ? ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                primary: Colors.green),
+                                            icon: Icon(Icons.timer),
+                                            onPressed: () {
+                                              Map directions = {
+                                                'lat': today[k]['lat'],
+                                                'long': today[k]['long']
+                                              };
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          locationfind(
+                                                            locationdetails:
+                                                                directions,
+                                                          )));
+                                            },
+                                            label: Text("Start"),
+                                          )
+                                        : Icon(
+                                            Icons.upcoming,
+                                            color: Colors.green,
+                                          )
                               ],
                             ),
                             SizedBox(

@@ -22,7 +22,9 @@ class _galleryrequestState extends State<galleryrequest> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final picked = await Imagepic.pickImage(source: ImageSource.gallery);
-          files.add(File(picked!.path));
+          if (picked != null) {
+            files.add(File(picked.path));
+          }
           setState(() {});
         },
         child: Icon(Icons.add),

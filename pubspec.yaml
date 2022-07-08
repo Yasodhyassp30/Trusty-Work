@@ -47,6 +47,7 @@ dependencies:
   location: ^4.2.0
   flutter_polyline_points: ^1.0.0
   table_calendar: ^3.0.6
+  introduction_screen: ^3.0.2
   
 
 dev_dependencies:

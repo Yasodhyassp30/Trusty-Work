@@ -3,23 +3,38 @@ import 'package:provider/provider.dart';
 import 'package:sem/models/user.dart';
 import 'package:sem/screens/Auth/Auth.dart';
 import 'package:sem/screens/Home/Home.dart';
+import 'package:sem/screens/Wrapped.dart';
 import 'package:sem/screens/intro%20screens/splash.dart';
 import 'package:sem/wrappers/wrapperprofile.dart';
 
-class Wrapper extends StatelessWidget {
-  const Wrapper({Key? key}) : super(key: key);
+class Wrappersp extends StatefulWidget {
+  const Wrappersp({Key? key}) : super(key: key);
 
   @override
+  State<Wrappersp> createState() => _WrapperspState();
+}
+
+class _WrapperspState extends State<Wrappersp> {
+  bool End = false;
+  @override
+  void toggle() {
+    setState(() {
+      End = !End;
+    });
+  }
+
   Widget build(BuildContext context) {
     final currentuser = Provider.of<myUser?>(context);
 
-    if (currentuser == null) {
+    if (!End && currentuser == null) {
       return Container(
-        child: Auth(),
+        child: splash(
+          toogle: toggle,
+        ),
       );
     } else {
       return Container(
-        child: profilewrapper(),
+        child: Wrapper(),
       );
     }
   }

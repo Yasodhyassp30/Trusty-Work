@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:sem/userwidgets/viewworker.dart';
 import '../services/storage.dart';
 
 class posts extends StatefulWidget {
@@ -30,8 +31,20 @@ class _postsState extends State<posts> {
   List<File> images = [];
   String? dropdown1;
   int? selected;
+  bool view = false;
+  void toggler() {
+    setState(() {
+      view = !view;
+    });
+  }
+
+  DocumentSnapshot? documentdata;
+
   @override
   Widget build(BuildContext context) {
+    if (view) {
+      return viewworker(workerdata: documentdata, toggler: toggler);
+    }
     return Scaffold(
       backgroundColor: Colors.grey[200],
       resizeToAvoidBottomInset: false,
@@ -259,120 +272,225 @@ class _postsState extends State<posts> {
                       posts = snapshot.data!.docs;
                     }
                     return Container(
-                      padding: EdgeInsets.all(10),
-                      child: (posts.length > 0)
-                          ? (ListView.builder(
-                              itemCount: posts.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Looking For ${posts[index].get('looking')}',
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          child: (posts.length > 0)
+                              ? (ListView.builder(
+                                  itemCount: posts.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.white),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Looking For ${posts[index].get('looking')}',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              Text(
+                                                  'Images : ${posts[index].get('URL').length}',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.black26)),
+                                              Divider(
+                                                height: 3,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                  '${posts[index].get('text')}',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.black38)),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                height: 200,
+                                                child: ListView.builder(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount: posts[index]
+                                                        .get('URL')
+                                                        .length,
+                                                    itemBuilder: (context, k) {
+                                                      return Container(
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        height: 200,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.6,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                          child: Image.network(
+                                                            posts[index]
+                                                                .get('URL')[k],
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              (index == selected)
+                                                  ? Container(
+                                                      height: 200,
+                                                      child: (posts[index]
+                                                                  .get(
+                                                                      'interest')
+                                                                  .length >
+                                                              0)
+                                                          ? ListView.builder(
+                                                              itemCount: posts[
+                                                                      index]
+                                                                  .get(
+                                                                      'interest')
+                                                                  .length,
+                                                              itemBuilder:
+                                                                  (context, z) {
+                                                                return FutureBuilder<
+                                                                        DocumentSnapshot>(
+                                                                    future: FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            'userdata')
+                                                                        .doc(posts[index].get('interest')[
+                                                                            z])
+                                                                        .get(),
+                                                                    builder:
+                                                                        (context,
+                                                                            workerdata) {
+                                                                      if (workerdata
+                                                                              .connectionState !=
+                                                                          ConnectionState
+                                                                              .waiting) {
+                                                                        return Container(
+                                                                          child:
+                                                                              Row(children: [
+                                                                            CircleAvatar(
+                                                                              radius: MediaQuery.of(context).size.width * 0.1,
+                                                                              foregroundImage: NetworkImage(workerdata.data!.get('photoURL')),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 5,
+                                                                            ),
+                                                                            Text(workerdata.data!.get('Username')),
+                                                                            Expanded(child: SizedBox()),
+                                                                            ElevatedButton.icon(
+                                                                              onPressed: () {
+                                                                                setState(() {
+                                                                                  view = true;
+                                                                                  documentdata = workerdata.data;
+                                                                                });
+                                                                              },
+                                                                              label: Text("View"),
+                                                                              icon: Icon(Icons.person),
+                                                                              style: ElevatedButton.styleFrom(primary: Colors.lightGreen),
+                                                                            )
+                                                                          ]),
+                                                                        );
+                                                                      } else {
+                                                                        return Container();
+                                                                      }
+                                                                    });
+                                                              })
+                                                          : Container(
+                                                              child: Center(
+                                                                  child: Text(
+                                                                      "No Responses")),
+                                                            ),
+                                                    )
+                                                  : Container(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: !posts[index]
+                                                            .get('completed')
+                                                        ? () async {
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'posts')
+                                                                .doc(
+                                                                    posts[index]
+                                                                        .id)
+                                                                .update({
+                                                              'completed': true
+                                                            });
+                                                          }
+                                                        : null,
+                                                    child: !posts[index]
+                                                            .get('completed')
+                                                        ? Text(
+                                                            'Mark as Completed')
+                                                        : Text('Completed'),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            primary:
+                                                                Colors.red),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      if (selected == null) {
+                                                        setState(() {
+                                                          selected = index;
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          selected = null;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                        'Responses : ${posts[index].get('interest').length}'),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            primary: Colors
+                                                                .lightGreen),
+                                                  )
+                                                ],
+                                              )
+                                            ]),
+                                      ),
+                                    );
+                                  }))
+                              : Container(
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Colors.grey[200]),
+                                      child: Center(
+                                        child: Text(
+                                          'No Posts',
                                           style: TextStyle(fontSize: 18),
                                         ),
-                                        Text(
-                                            'Images : ${posts[index].get('URL').length}',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black26)),
-                                        Divider(
-                                          height: 3,
-                                          color: Colors.black,
-                                        ),
-                                        Text('${posts[index].get('text')}',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black38)),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          height: 200,
-                                          child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: posts[index]
-                                                  .get('URL')
-                                                  .length,
-                                              itemBuilder: (context, k) {
-                                                return Container(
-                                                  padding: EdgeInsets.all(5),
-                                                  height: 200,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.6,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.0),
-                                                    child: Image.network(
-                                                      posts[index]
-                                                          .get('URL')[k],
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                );
-                                              }),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed:
-                                                  !posts[index].get('completed')
-                                                      ? () async {}
-                                                      : null,
-                                              child: !posts[index]
-                                                      .get('completed')
-                                                  ? Text('Mark as Completed')
-                                                  : Text('Completed'),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.red),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  selected = index;
-                                                });
-                                              },
-                                              child: Text(
-                                                  'Responses : ${posts[index].get('interest').length}'),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.lightGreen),
-                                            )
-                                          ],
-                                        )
-                                      ]),
-                                );
-                              }))
-                          : Container(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.grey[200]),
-                                  child: Center(
-                                    child: Text(
-                                      'No Posts',
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  )),
-                            ),
-                    );
-                  })))
+                                      )),
+                                ),
+                        ));
+                  }))),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.07,
+          )
         ]),
       )),
     );
