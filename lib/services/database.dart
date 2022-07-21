@@ -20,7 +20,10 @@ class DatabaseService {
       'Summery': "",
       "works": works,
       "Rating": 0,
-      "ratecount": 0
+      "ratecount": 0,
+      "reportcount": 0,
+      'reported': [],
+      "ban": null
     });
   }
 

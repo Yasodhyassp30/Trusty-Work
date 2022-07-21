@@ -48,6 +48,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   table_calendar: ^3.0.6
   introduction_screen: ^3.0.2
+  csc_picker: ^0.2.6
   
 
 dev_dependencies:

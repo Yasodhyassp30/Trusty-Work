@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,8 @@ import 'package:sem/models/user.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sem/services/storage.dart';
 import 'dart:io';
+
+import 'package:sem/userwidgets/editprofile.dart';
 
 class useraccount extends StatefulWidget {
   const useraccount({Key? key}) : super(key: key);
@@ -15,7 +18,14 @@ class useraccount extends StatefulWidget {
 
 class _useraccountState extends State<useraccount> {
   String? username, email, pic;
+  bool edit = false;
+  void toggle() {
+    setState(() {
+      edit = !edit;
+    });
+  }
 
+  var selected;
   @override
   Widget build(BuildContext context) {
     final currentuser = Provider.of<myUser?>(context);
@@ -23,10 +33,16 @@ class _useraccountState extends State<useraccount> {
     username = currentuser?.username;
     email = currentuser?.Email;
     pic = currentuser?.PicUrl;
+
     final datastore d1 = datastore();
     FirebaseAuth _auth = FirebaseAuth.instance;
     File name;
-
+    if (edit) {
+      return editprofile(
+        user: selected,
+        toggle: toggle,
+      );
+    }
     return Container(
         child: SafeArea(
             child: SingleChildScrollView(
@@ -120,7 +136,16 @@ class _useraccountState extends State<useraccount> {
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               primary: Colors.green[500]),
-                          onPressed: () {},
+                          onPressed: () async {
+                            dynamic user = await FirebaseFirestore.instance
+                                .collection('userdata')
+                                .doc(_auth.currentUser!.uid)
+                                .get();
+                            setState(() {
+                              edit = true;
+                              selected = user;
+                            });
+                          },
                           child: Text("Change Details")),
                     ),
                     Container(

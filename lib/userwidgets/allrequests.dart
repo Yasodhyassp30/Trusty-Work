@@ -6,6 +6,7 @@ import 'package:sem/screens/Loadings/loadingscreenfadingcube.dart';
 import 'package:sem/services/database.dart';
 import 'package:sem/userwidgets/viewrequests.dart';
 import '../services/workrequests.dart';
+import 'package:intl/intl.dart';
 
 class allrequests extends StatefulWidget {
   const allrequests({Key? key}) : super(key: key);
@@ -214,25 +215,37 @@ class _allrequestsState extends State<allrequests> {
                                                         color:
                                                             Colors.green[500]),
                                                   ),
-                                                  (objects[index]['completed'])
+                                                  (DateTime.parse(objects[index]
+                                                                  ['date'])
+                                                              .isBefore(DateTime
+                                                                  .now()) &&
+                                                          !objects[index]
+                                                              ['completed'])
                                                       ? Text(
-                                                          'Status : Completed',
+                                                          'Status : Overdue',
                                                           style: TextStyle(
                                                               color:
-                                                                  Colors.green),
+                                                                  Colors.red),
                                                         )
                                                       : (objects[index]
-                                                              ['accepted'])
+                                                              ['completed'])
                                                           ? Text(
-                                                              'Status : Ongoing',
+                                                              'Status : Completed',
                                                               style: TextStyle(
                                                                   color: Colors
-                                                                      .orange))
-                                                          : Text(
-                                                              'Status : Not Accepted yet',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .red)),
+                                                                      .green),
+                                                            )
+                                                          : (objects[index]
+                                                                  ['accepted'])
+                                                              ? Text(
+                                                                  'Status : Ongoing',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .orange))
+                                                              : Text(
+                                                                  'Status : Not Accepted yet',
+                                                                  style: TextStyle(
+                                                                      color: Colors.red)),
                                                   SizedBox(
                                                     height: 20.0,
                                                   ),
@@ -247,21 +260,105 @@ class _allrequestsState extends State<allrequests> {
                                                         fontSize: 18.0,
                                                         color: Colors.brown),
                                                   ),
-                                                  ElevatedButton(
-                                                      onPressed: () async {
-                                                        selected =
-                                                            objects[index];
-                                                        viewdetails = true;
-                                                        setState(() {});
-                                                      },
-                                                      child:
-                                                          Text("View Details"),
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(Colors
-                                                                          .lightGreen[
-                                                                      500]))),
+                                                  Row(
+                                                    children: [
+                                                      ElevatedButton(
+                                                          onPressed: () async {
+                                                            selected =
+                                                                objects[index];
+                                                            viewdetails = true;
+                                                            setState(() {});
+                                                          },
+                                                          child: Text(
+                                                              "View Details"),
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStateProperty
+                                                                      .all(Colors
+                                                                              .lightGreen[
+                                                                          500]))),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      (DateTime.parse(objects[index]['date'])
+                                                                  .isBefore(DateTime
+                                                                      .now()) &&
+                                                              !objects[index]
+                                                                  ['completed'])
+                                                          ? ElevatedButton.icon(
+                                                              icon: Icon(Icons
+                                                                  .warning),
+                                                              onPressed:
+                                                                  (!objects[index]
+                                                                          [
+                                                                          'reported'])
+                                                                      ? () {
+                                                                          showDialog(
+                                                                              context: context,
+                                                                              builder: (context) => AlertDialog(
+                                                                                    title: Text("Report Service Provider"),
+                                                                                    content: Text("Service Provider has missed your work request do you want to Report the service Provider ?"),
+                                                                                    actions: [
+                                                                                      TextButton(
+                                                                                          onPressed: () async {
+                                                                                            await FirebaseFirestore.instance.collection('requests').doc(objects[index].id).update({
+                                                                                              'reported': true
+                                                                                            });
+                                                                                            DocumentSnapshot workerdetails = await FirebaseFirestore.instance.collection('userdata').doc(objects[index]['Reciever']).get();
+
+                                                                                            if (workerdetails.get('ban') == null) {
+                                                                                              if (workerdetails.get('reportcount') > 20) {
+                                                                                                await FirebaseFirestore.instance.collection('userdata').doc(objects[index]['Reciever']).update({
+                                                                                                  'ban': {
+                                                                                                    'start': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                                                                                                    'end': DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 7))),
+                                                                                                  }
+                                                                                                });
+                                                                                              }
+                                                                                              if (workerdetails.get('reportcount') > 15) {
+                                                                                                await FirebaseFirestore.instance.collection('userdata').doc(objects[index]['Reciever']).update({
+                                                                                                  'ban': {
+                                                                                                    'start': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                                                                                                    'end': DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 5))),
+                                                                                                  }
+                                                                                                });
+                                                                                              }
+                                                                                              if (workerdetails.get('reportcount') > 10) {
+                                                                                                await FirebaseFirestore.instance.collection('userdata').doc(objects[index]['Reciever']).update({
+                                                                                                  'ban': {
+                                                                                                    'start': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                                                                                                    'end': DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 3))),
+                                                                                                  }
+                                                                                                });
+                                                                                              }
+                                                                                            }
+                                                                                            if (!workerdetails.get('reported').contains(_auth.currentUser!.uid)) {
+                                                                                              await FirebaseFirestore.instance.collection('userdata').doc(objects[index]['Reciever']).update({
+                                                                                                'reportcount': FieldValue.increment(1),
+                                                                                                'reported': FieldValue.arrayUnion([
+                                                                                                  _auth.currentUser!.uid
+                                                                                                ])
+                                                                                              });
+                                                                                            }
+
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: Text('Submit'))
+                                                                                    ],
+                                                                                  ));
+                                                                        }
+                                                                      : null,
+                                                              label: (!objects[index]['reported'])
+                                                                  ? Text(
+                                                                      "Report")
+                                                                  : Text(
+                                                                      "Reported"),
+                                                              style: ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(Colors.red[500])))
+                                                          : Container()
+                                                    ],
+                                                  )
                                                 ],
                                               ),
                                             ),

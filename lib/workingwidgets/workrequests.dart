@@ -23,6 +23,7 @@ class _workrequestsState extends State<workrequests> {
   bool completed = false;
   bool not = false;
   bool today = false;
+  bool banned = false;
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -59,6 +60,79 @@ class _workrequestsState extends State<workrequests> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      FutureBuilder<DocumentSnapshot>(
+                          future: FirebaseFirestore.instance
+                              .collection('userdata')
+                              .doc(_auth.currentUser!.uid)
+                              .get(),
+                          builder: (context, bandata) {
+                            if (bandata.connectionState !=
+                                ConnectionState.waiting) {
+                              if (bandata.data!.get('ban') != null &&
+                                  DateTime.parse(
+                                          bandata.data!.get('ban')['end'])
+                                      .isAfter(DateTime.now())) {
+                                Future.delayed(
+                                    Duration.zero,
+                                    () => showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Row(
+                                                children: [
+                                                  Icon(Icons.warning),
+                                                  SizedBox(width: 10),
+                                                  Text("Important")
+                                                ],
+                                              ),
+                                              content: Text(
+                                                  "Due to Excessive Reports Your Account Has Been Blocked from accepting new requests Please Keep up the Honest Work to build this Platform a Better place else may lead to Dire consequences \n\n This Will be removed on ${bandata.data!.get('ban')['end']} "),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("Acknowleged"))
+                                              ],
+                                            )));
+
+                                banned = true;
+                              }
+                              if (bandata.data!.get('ban') != null &&
+                                  DateTime.parse(
+                                          bandata.data!.get('ban')['end'])
+                                      .isBefore(DateTime.now())) {
+                                FirebaseFirestore.instance
+                                    .collection('userdata')
+                                    .doc(_auth.currentUser!.uid)
+                                    .update({'ban': null, 'reported': []});
+                                Future.delayed(
+                                    Duration.zero,
+                                    () => showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Row(
+                                                children: [
+                                                  Icon(Icons.warning),
+                                                  SizedBox(width: 10),
+                                                  Text("Important")
+                                                ],
+                                              ),
+                                              content: Text(
+                                                  "Ban Imposed on Your account has been lifted \n\n Please Keep up the Honest Work to build this Platform a Better place else may lead to Dire consequences "),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("Acknowleged"))
+                                              ],
+                                            )));
+
+                                banned = false;
+                              }
+                            }
+                            return Container();
+                          }),
                       Container(
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -198,24 +272,34 @@ class _workrequestsState extends State<workrequests> {
                                                           color: Colors
                                                               .green[500]),
                                                     ),
-                                                    (e['completed'])
+                                                    (DateTime.parse(e['date'])
+                                                                .isBefore(DateTime
+                                                                    .now()) &&
+                                                            !e['completed'])
                                                         ? Text(
-                                                            'Status : Completed',
+                                                            'Status : Overdue',
                                                             style: TextStyle(
-                                                                color: Colors
-                                                                    .green),
+                                                                color:
+                                                                    Colors.red),
                                                           )
-                                                        : (e['accepted'])
+                                                        : (e['completed'])
                                                             ? Text(
-                                                                'Status : Ongoing',
+                                                                'Status : Completed',
                                                                 style: TextStyle(
                                                                     color: Colors
-                                                                        .orange))
-                                                            : Text(
-                                                                'Status : Not Accepted yet',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .red)),
+                                                                        .green),
+                                                              )
+                                                            : (e['accepted'])
+                                                                ? Text(
+                                                                    'Status : Ongoing',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .orange))
+                                                                : Text(
+                                                                    'Status : Not Accepted yet',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .red)),
                                                     SizedBox(
                                                       height: 20.0,
                                                     ),
@@ -231,18 +315,21 @@ class _workrequestsState extends State<workrequests> {
                                                           color: Colors.brown),
                                                     ),
                                                     ElevatedButton(
-                                                        onPressed: () async {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        singlerequest(
-                                                                          requestdetails:
-                                                                              e,
-                                                                        )),
-                                                          );
-                                                        },
+                                                        onPressed:
+                                                            (!e['accepted'] &&
+                                                                    banned)
+                                                                ? null
+                                                                : () async {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              singlerequest(
+                                                                                requestdetails: e,
+                                                                              )),
+                                                                    );
+                                                                  },
                                                         child: Text(
                                                             "View Details"),
                                                         style: ButtonStyle(

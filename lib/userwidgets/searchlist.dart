@@ -23,6 +23,13 @@ class _searchedlistState extends State<searchedlist> {
 
   @override
   Widget build(BuildContext context) {
+    List<DocumentSnapshot> workerlist = widget.sreachedlist!.docs;
+    workerlist.sort((b, a) => (a.get('ratecount') != 0.0
+            ? (a.get('Rating') / a.get('ratecount'))
+            : 0.0)
+        .compareTo(b.get('ratecount') != 0.0
+            ? (b.get('Rating') / b.get('ratecount'))
+            : 0.0));
     if (view) {
       return viewworker(workerdata: selected, toggler: toggler);
     } else {
@@ -47,6 +54,10 @@ class _searchedlistState extends State<searchedlist> {
                       icon: Icon(Icons.clear))
                 ]),
           ),
+          Text(
+            "Ordered by Highest Rating",
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
           Expanded(
               child: Container(
             padding: EdgeInsets.all(10),
@@ -60,7 +71,7 @@ class _searchedlistState extends State<searchedlist> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selected = widget.sreachedlist!.docs[index];
+                              selected = workerlist[index];
                               view = true;
                             });
                           },
@@ -79,23 +90,19 @@ class _searchedlistState extends State<searchedlist> {
                                             height: 20.0,
                                           ),
                                           Text(
-                                            widget.sreachedlist!.docs[index]
-                                                ['Username'],
+                                            workerlist[index]['Username'],
                                             style: TextStyle(fontSize: 15.0),
                                           ),
                                           Text(
-                                            "Contact No :${widget.sreachedlist!.docs[index]['Contact_No']}",
+                                            "Contact No :${workerlist[index]['Contact_No']}",
                                             style: TextStyle(fontSize: 15.0),
                                           ),
                                           RatingBarIndicator(
-                                            rating: (widget.sreachedlist!
-                                                            .docs[index]
+                                            rating: (workerlist[index]
                                                         ['ratecount'] >
                                                     0
-                                                ? widget.sreachedlist!
-                                                        .docs[index]['Rating'] /
-                                                    widget.sreachedlist!
-                                                            .docs[index]
+                                                ? workerlist[index]['Rating'] /
+                                                    workerlist[index]
                                                         ['ratecount']
                                                 : 0),
                                             itemSize: 20.0,
@@ -123,8 +130,8 @@ class _searchedlistState extends State<searchedlist> {
                                               backgroundImage: AssetImage(
                                                   'assets/avatar.png'),
                                               foregroundImage: NetworkImage(
-                                                  widget.sreachedlist!
-                                                      .docs[index]['photoURL']),
+                                                  workerlist[index]
+                                                      ['photoURL']),
                                             )
                                           ],
                                         ))

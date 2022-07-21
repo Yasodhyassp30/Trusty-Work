@@ -29,7 +29,8 @@ class WorkRequests {
       'long': location.longitude,
       'rating': -1,
       'date': date,
-      'galleryrequest': false
+      'galleryrequest': false,
+      'reported': false,
     });
   }
 

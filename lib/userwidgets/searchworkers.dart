@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sem/screens/Loadings/loadingscreenfadingcube.dart';
 import 'package:sem/services/database.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +9,6 @@ import 'package:sem/services/workrequests.dart';
 import 'package:sem/userwidgets/dashboardtodayrequests.dart';
 import 'package:sem/userwidgets/postsuser.dart';
 import 'package:sem/userwidgets/searchlist.dart';
-import 'package:sem/userwidgets/viewworker.dart';
 import 'package:sem/workingwidgets/notifications.dart';
 
 class searchworkers extends StatefulWidget {
@@ -126,7 +121,6 @@ class _searchworkersState extends State<searchworkers> {
                                           ConnectionState.waiting) {
                                     return IconButton(
                                         onPressed: () {
-                                          print(notifications.data!.docs);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -144,9 +138,19 @@ class _searchworkersState extends State<searchworkers> {
                                           color: Colors.white,
                                         ));
                                   } else {
-                                    return Container(
-                                      child: Text('No new requests'),
-                                    );
+                                    return IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      notificationlist()));
+                                        },
+                                        icon: Icon(
+                                          Icons.notifications,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ));
                                   }
                                 }),
                           ],
