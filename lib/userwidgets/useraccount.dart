@@ -6,6 +6,7 @@ import 'package:sem/models/user.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sem/services/storage.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:sem/userwidgets/editprofile.dart';
 
@@ -153,7 +154,52 @@ class _useraccountState extends State<useraccount> {
                       child: ElevatedButton(
                           style:
                               ElevatedButton.styleFrom(primary: Colors.brown),
-                          onPressed: () {},
+                          onPressed: () async {
+                            String error = "";
+                            QuerySnapshot reqeusts = await FirebaseFirestore
+                                .instance
+                                .collection('requests')
+                                .where('Contractor',
+                                    isEqualTo: _auth.currentUser!.uid)
+                                .where('completed', isEqualTo: false)
+                                .get();
+
+                            reqeusts.docs.forEach((element) {
+                              if (DateTime.parse(element['date'])
+                                  .isAfter(DateTime.now())) {
+                                error = "You have Ongoing Requests";
+                              }
+                            });
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text("Delete account"),
+                                      content: (error != "")
+                                          ? Text(error)
+                                          : Text(
+                                              "Do you Want to Delete Your account ? "),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text("Ok"),
+                                          onPressed: () {
+                                            if (error != "") {
+                                              Navigator.pop(context);
+                                            } else {
+                                              _auth.currentUser!.delete();
+                                              _auth.signOut();
+                                              Navigator.pop(context);
+                                            }
+                                          },
+                                        )
+                                      ],
+                                    ));
+                          },
                           child: Text("Delete Account")),
                     ),
                     Container(

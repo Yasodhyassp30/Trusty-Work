@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sem/screens/Loadings/loadingscreenfadingcube.dart';
 
-class viewgallery extends StatefulWidget {
-  final String? id;
-  const viewgallery({Key? key, this.id}) : super(key: key);
+class customizeviewgallery extends StatefulWidget {
+  const customizeviewgallery({Key? key}) : super(key: key);
 
   @override
-  State<viewgallery> createState() => _viewgalleryState();
+  State<customizeviewgallery> createState() => _customizeviewgalleryState();
 }
 
-class _viewgalleryState extends State<viewgallery> {
+class _customizeviewgalleryState extends State<customizeviewgallery> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   QuerySnapshot? data;
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class _viewgalleryState extends State<viewgallery> {
         child: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
               .collection('gallery')
-              .where('sender', isEqualTo: widget.id)
+              .where('sender', isEqualTo: _auth.currentUser!.uid)
               .where('accepted', isEqualTo: true)
               .get(),
           builder: (BuildContext context, snapshot) {
@@ -242,6 +243,32 @@ class _viewgalleryState extends State<viewgallery> {
                                               )
                                             ],
                                           ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                    child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          primary: Colors.red),
+                                                  onPressed: () async {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('gallery')
+                                                        .doc(data!
+                                                            .docs[index].id)
+                                                        .delete();
+                                                    setState(() {});
+                                                  },
+                                                  child: Text('Remove'),
+                                                ))
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       )),
                                 );

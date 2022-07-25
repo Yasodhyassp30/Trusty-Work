@@ -121,30 +121,95 @@ class _viewrequestState extends State<viewrequest> {
                                       SizedBox(
                                         height: 10.0,
                                       ),
-                                      (!widget.requestdetails['accepted'])
-                                          ? Text(
-                                              "Status : Not Accepted",
+                                      (!widget.requestdetails['completed'] &&
+                                              DateTime.parse(widget
+                                                      .requestdetails['date'])
+                                                  .isBefore(DateTime.now()))
+                                          ? (Text(
+                                              "Status : Overdue",
                                               style: (TextStyle(
                                                   color: Colors.red)),
-                                            )
-                                          : (widget.requestdetails['completed'])
+                                            ))
+                                          : (!widget.requestdetails['accepted'])
                                               ? Text(
-                                                  "Status : Completed",
+                                                  "Status : Not Accepted",
                                                   style: (TextStyle(
-                                                      color:
-                                                          Colors.green[500])),
+                                                      color: Colors.red)),
                                                 )
-                                              : Text(
-                                                  "Status : Ongoing",
-                                                  style: TextStyle(
-                                                      color: Colors.orange),
-                                                ),
+                                              : (widget.requestdetails[
+                                                      'completed'])
+                                                  ? Text(
+                                                      "Status : Completed",
+                                                      style: (TextStyle(
+                                                          color: Colors
+                                                              .green[500])),
+                                                    )
+                                                  : Text(
+                                                      "Status : Ongoing",
+                                                      style: TextStyle(
+                                                          color: Colors.orange),
+                                                    ),
                                       Text(
                                           "Price : \$ ${widget.requestdetails['payment']}"),
                                       Text(
                                           "Contact : ${widget.requestdetails['Contact_no']}"),
                                       Text(
                                           "${widget.requestdetails['address']}"),
+                                      (!widget.requestdetails['completed'] &&
+                                              DateTime.parse(widget
+                                                      .requestdetails['date'])
+                                                  .isBefore(DateTime.now()))
+                                          ? Row(
+                                              children: [
+                                                Expanded(
+                                                    child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          primary: Colors
+                                                              .lightGreen),
+                                                  onPressed: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            AlertDialog(
+                                                              title: Text(
+                                                                  "Mark completed"),
+                                                              content: Text(
+                                                                  "Are you sure you want to mark this request as completed?"),
+                                                              actions: [
+                                                                TextButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      WorkRequests
+                                                                          w1 =
+                                                                          WorkRequests();
+                                                                      await w1.markascompleted(widget
+                                                                          .requestdetails
+                                                                          .id);
+                                                                      widget
+                                                                          .toggler();
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        "Yes")),
+                                                                TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        "No"))
+                                                              ],
+                                                            ));
+                                                  },
+                                                  child:
+                                                      Text('Mark as Completed'),
+                                                ))
+                                              ],
+                                            )
+                                          : Container(),
                                       SizedBox(
                                         height: 10.0,
                                       ),

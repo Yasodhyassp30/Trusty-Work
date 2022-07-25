@@ -6,7 +6,10 @@ import 'package:sem/models/user.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sem/screens/Loadings/loadingscreenfadingcube.dart';
 import 'package:sem/services/storage.dart';
+import 'package:sem/workingwidgets/customizegallery.dart';
 import 'dart:io';
+
+import 'editprofilework.dart';
 
 class workeraccount extends StatefulWidget {
   const workeraccount({Key? key}) : super(key: key);
@@ -17,6 +20,13 @@ class workeraccount extends StatefulWidget {
 
 class _workeraccountState extends State<workeraccount> {
   String? username, email, pic;
+  bool edit = false;
+  var selected;
+  void toggle() {
+    setState(() {
+      edit = !edit;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +38,12 @@ class _workeraccountState extends State<workeraccount> {
     final datastore d1 = datastore();
     FirebaseAuth _auth = FirebaseAuth.instance;
     File name;
+    if (edit) {
+      return editprofilew(
+        user: selected,
+        toggle: toggle,
+      );
+    }
     return FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance
             .collection('userdata')
@@ -125,9 +141,6 @@ class _workeraccountState extends State<workeraccount> {
                           ),
                           Text("$email"),
                           SizedBox(
-                            height: 30.0,
-                          ),
-                          SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -140,7 +153,7 @@ class _workeraccountState extends State<workeraccount> {
                                 child: Column(children: [
                                   Container(
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.07,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                             image: AssetImage(
@@ -172,7 +185,7 @@ class _workeraccountState extends State<workeraccount> {
                                 child: Column(children: [
                                   Container(
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.07,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                             image: AssetImage(
@@ -196,8 +209,33 @@ class _workeraccountState extends State<workeraccount> {
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.green[500]),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  dynamic user = await FirebaseFirestore
+                                      .instance
+                                      .collection('userdata')
+                                      .doc(_auth.currentUser!.uid)
+                                      .get();
+                                  setState(() {
+                                    edit = true;
+                                    selected = user;
+                                  });
+                                },
                                 child: Text("Change Details")),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.lightGreen,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const customizeviewgallery()));
+                                },
+                                child: Text("Customize Gallery")),
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width,

@@ -6,17 +6,31 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sem/screens/Home/Home.dart';
+import 'package:sem/screens/Loadings/loadingscreenfadingcube.dart';
 
-class editprofile extends StatefulWidget {
+class editprofilew extends StatefulWidget {
   final user, toggle;
-  const editprofile({Key? key, this.user, this.toggle}) : super(key: key);
+  const editprofilew({Key? key, this.user, this.toggle}) : super(key: key);
 
   @override
-  State<editprofile> createState() => _editprofileState();
+  State<editprofilew> createState() => _editprofilewState();
 }
 
-class _editprofileState extends State<editprofile> {
+class _editprofilewState extends State<editprofilew> {
+  List area = [];
+  List remove = [];
   final Imagepic = ImagePicker();
+  void getdata() async {
+    DocumentSnapshot data = await FirebaseFirestore.instance
+        .collection('userdata')
+        .doc(_auth.currentUser!.uid)
+        .get();
+
+    setState(() {
+      area = data.get('works');
+    });
+  }
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   String error = "";
   FirebaseFirestore store = FirebaseFirestore.instance;
@@ -25,23 +39,22 @@ class _editprofileState extends State<editprofile> {
   TextEditingController location = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirm = TextEditingController();
+  TextEditingController areas = TextEditingController();
   int index = 1;
   File? name;
   bool obsecure = true, loading = false, updated = false;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getdata();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String? pic = _auth.currentUser!.photoURL;
     if (loading) {
-      return Scaffold(
-          body: SafeArea(
-        child: Center(
-          child: Container(
-            height: 100,
-            width: 100,
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      ));
+      return loadfadingcube();
     }
     return Scaffold(
       backgroundColor: Color.fromARGB(245, 249, 249, 249),
@@ -174,10 +187,6 @@ class _editprofileState extends State<editprofile> {
                           SizedBox(
                             height: 10,
                           ),
-                          TextField(
-                            controller: location,
-                            decoration: InputDecoration(hintText: 'Location'),
-                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -224,6 +233,74 @@ class _editprofileState extends State<editprofile> {
                           SizedBox(
                             height: 10,
                           ),
+                          Text(
+                            'Work Area',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Container(
+                            height: 200,
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: (remove.contains(index)
+                                            ? Colors.grey
+                                            : Colors.lightGreen)),
+                                    padding: EdgeInsets.all(1),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            area[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  area.removeAt(index);
+                                                });
+                                              },
+                                              icon: Icon(Icons.clear))
+                                        ]),
+                                  ),
+                                );
+                              },
+                              itemCount: (area.length),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Add Work Area',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            controller: areas,
+                            decoration: InputDecoration(
+                                hintText: 'Workarea',
+                                suffix: IconButton(
+                                  onPressed: () {
+                                    if (areas.text.isNotEmpty) {
+                                      setState(() {
+                                        area.add(areas.text);
+                                        areas.clear();
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.add),
+                                )),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -236,7 +313,10 @@ class _editprofileState extends State<editprofile> {
                                     if (phone.text.trim().isNotEmpty) {
                                       newdata['Contact_No'] = phone.text.trim();
                                     }
-
+                                    await store
+                                        .collection('userdata')
+                                        .doc(_auth.currentUser!.uid)
+                                        .update({'works': area});
                                     try {
                                       await store
                                           .collection('userdata')

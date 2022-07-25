@@ -314,22 +314,39 @@ class _workrequestsState extends State<workrequests> {
                                                           fontSize: 18.0,
                                                           color: Colors.brown),
                                                     ),
+                                                    SizedBox(height: 5),
+                                                    ((DateTime.parse(e['date'])
+                                                                .isBefore(DateTime
+                                                                    .now()) &&
+                                                            !e['completed']))
+                                                        ? Text(
+                                                            "Overdued Requests only be mark as completed by Contractor",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red),
+                                                          )
+                                                        : Text(""),
                                                     ElevatedButton(
-                                                        onPressed:
-                                                            (!e['accepted'] &&
-                                                                    banned)
-                                                                ? null
-                                                                : () async {
-                                                                    Navigator
-                                                                        .push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) =>
+                                                        onPressed: (((DateTime.parse(e[
+                                                                            'date'])
+                                                                        .isBefore(DateTime
+                                                                            .now()) &&
+                                                                    !e[
+                                                                        'completed'])) ||
+                                                                (!e['accepted'] &&
+                                                                    banned))
+                                                            ? null
+                                                            : () async {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
                                                                               singlerequest(
                                                                                 requestdetails: e,
                                                                               )),
-                                                                    );
-                                                                  },
+                                                                );
+                                                              },
                                                         child: Text(
                                                             "View Details"),
                                                         style: ButtonStyle(

@@ -260,6 +260,20 @@ class _allrequestsState extends State<allrequests> {
                                                         fontSize: 18.0,
                                                         color: Colors.brown),
                                                   ),
+                                                  ((DateTime.parse(
+                                                                  objects[index]
+                                                                      ['date'])
+                                                              .isBefore(DateTime
+                                                                  .now()) &&
+                                                          !objects[index]
+                                                              ['completed']))
+                                                      ? Text(
+                                                          "Overdued Requests only be mark as completed by Contractor",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        )
+                                                      : Text(""),
                                                   Row(
                                                     children: [
                                                       ElevatedButton(
