@@ -1,16 +1,24 @@
-# sem
+# Trusy Work
 
-A new Flutter project.
+Trusy Work is an app to help you find people for jobs around the house. such as plumber, electrician, or handyman with ability to observe thier previous works for extra validation of the service providers capability.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+### For People Looking for Help
+- Browse different services offered by professionals.
+- Post job requests with details about what you need.
+- Check out profiles and past work of service providers.
 
-A few resources to get you started if this is your first Flutter project:
+### For Service Providers
+- Create profiles showing your skills and availability.
+- Share photos of your past work to showcase your abilities.
+- Get job requests and chat with potential clients directly in the app.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Previous Works Gallery
+- Service providers can show off their previous jobs with pictures.
+- People looking for help can see examples of past work to help them decide.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Technologies Used
+- **Flutter**: cross platform app development framework.
+- **Firebase**: cloud storage, cloud firestore
+- **Google maps**: direction services
